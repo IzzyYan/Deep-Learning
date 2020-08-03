@@ -67,7 +67,7 @@ $$
   a = \frac{e^z - e^{-z}}{e^z + e^{-z}}
   $$
 
-效果几乎总比 sigmoid 函数好（除开**二元分类的输出层**，因为我们希望输出的结果介于 0 到 1 之间），因为函数输出介于-1和1之间，激活函数的平均值就更接近0，有类似数据中心化的效果。
+效果几乎总比 sigmoid 函数好（除了**二元分类的输出层**，因为我们希望输出的结果介于 0 到 1 之间），因为函数输出介于-1和1之间，激活函数的平均值就更接近0，有类似数据中心化的效果。
 
 然而，tanh函数存在和sigmoid函数一样的缺点：当z趋近无穷大（或无穷小），导数的梯度（即函数的斜率）就趋紧于0，这使得梯度算法的速度大大减缓。
 
@@ -90,4 +90,104 @@ Leaky ReLU保证在z < 0的时候，梯度仍然不为0。理论上来说，Leak
 在选择激活函数的时候，如果在不知道该选什么的时候就选择 ReLU，当然也没有固定答案，要依据实际问题在交叉验证集合中进行验证分析。当然，我们可以在不同层选用不同的激活函数。
 
 ## 使用非线性激活函数的原因
+
+使用线性激活函数和不使用激活函数而直接使用 Logistic 回归没有区别，那么无论神经网络有多少层，输出都是输入的线性组合，与**没有隐藏层**效果相当，就成了最原始的感知器了。
+
+如果将机器学习用于回归问题，可以考虑用线性激活函数。
+
+## 激活函数的导数
+
+* sigmoid函数：
+
+$$
+g(z) = \frac{1}{1+e^{-z}}
+$$
+
+$$
+g\prime(z)=\frac{dg(z)}{dz} = \frac{1}{1+e^{-z}}(1-\frac{1}{1+e^{-z}})=g(z)(1-g(z))
+$$
+
+* tanh函数：
+
+$$
+g(z) = tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}
+$$
+
+$$
+g\prime(z)=\frac{dg(z)}{dz} = 1-(tanh(z))^2=1-(g(z))^2
+$$
+
+* ReLU函数：
+
+$$
+g(z) = max(0,z)
+$$
+
+$$
+g'(z) = \begin{cases}  
+0 & 当z<0 \\
+1 & 当z\geq0
+\end{cases}
+$$
+
+* Leaky ReLU函数：
+
+$$
+g(z) = max(0.01z,z)
+$$
+
+$$
+g'(z) = \begin{cases}  
+0.01 & 当z<0 \\
+1 & 当z\geq0
+\end{cases}
+$$
+
+## 神经网络的梯度下降法
+
+### 正向梯度下降（Forward Propagation）
+
+$$
+Z^{[1]}={(W^{[1]})}^TX+b^{[1]}
+$$
+
+$$
+A^{[1]}=g^{[1]}(Z^{[1]})
+$$
+
+$$
+Z^{[2]}={(W^{[2]})}^TA^{[1]}+b^{[2]}
+$$
+
+$$
+A^{[2]}=g^{[2]}(Z^{[2]})=\sigma(Z^{[2]})
+$$
+
+### 反向梯度下降（Backward Propagation）
+
+神经网络反向梯度下降公式（左）和其代码向量化（右）：
+
+![img](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Neural_Networks_and_Deep_Learning/summary-of-gradient-descent.png)
+
+## 随机初始化（Random Initialization）
+
+如果在初始时将两个隐藏神经元的参数设置为相同的大小，那么两个隐藏神经元对输出单元的影响也是相同的，通过反向梯度下降去进行计算的时候，会得到同样的梯度大小，所以在经过多次迭代后，两个隐藏层单位仍然是对称的(symmetric)。无论设置多少个隐藏单元，其最终的影响都是相同的，那么多个隐藏神经元就没有了意义。
+
+在初始化的时候，W 参数要进行随机初始化，不可以设置为 0。而 b 因为不存在对称性的问题，可以设置为 0。
+
+以 2 个输入，2 个隐藏神经元为例：
+
+```python
+W = np.random.randn(2,2)* 0.01 
+##randn是从标准正态分布中返回一个或多个样本值，rand的随机样本位于[0, 1)中。
+b = np.zeros((2,1))
+```
+
+这里将 W 的值乘以 0.01（或者其他的常数值）的原因是为了使得权重 W 初始化为较小的值，这是因为使用 sigmoid 函数或者 tanh 函数作为激活函数时，W 比较小，则 Z=WX+b 所得的值趋近于 0，梯度较大，能够提高算法的更新速度。而如果 W 设置的太大的话，得到的梯度较小，训练过程因此会变得很慢。
+
+ReLU 和 Leaky ReLU 作为激活函数时不存在这种问题，因为在大于 0 的时候，梯度均为 1。
+
+
+
+[Week3 Quiz - Shallow Neural Networks]([[https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Week%203%20Quiz%20-%20Shallow%20Neural%20Networks.md](https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural Networks and Deep Learning/Week 3 Quiz - Shallow Neural Networks.md)])
 
