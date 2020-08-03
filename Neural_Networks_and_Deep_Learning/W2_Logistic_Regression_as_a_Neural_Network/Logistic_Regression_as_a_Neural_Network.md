@@ -134,5 +134,5 @@ $$
 
 
 
-[Week 2 Quiz - Neural Network Basics]([https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Week%202%20Quiz%20-%20Neural%20Network%20Basics.md](https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural Networks and Deep Learning/Week 2 Quiz - Neural Network Basics.md))
+[Week 2 Quiz - Neural Network Basics](https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Week%202%20Quiz%20-%20Neural%20Network%20Basics.md)
 
