@@ -189,5 +189,5 @@ ReLU 和 Leaky ReLU 作为激活函数时不存在这种问题，因为在大于
 
 
 
-[Week3 Quiz - Shallow Neural Networks]([[https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Week%203%20Quiz%20-%20Shallow%20Neural%20Networks.md](https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural Networks and Deep Learning/Week 3 Quiz - Shallow Neural Networks.md)])
+[Week3 Quiz - Shallow Neural Networks](https://github.com/Kulbear/deep-learning-coursera/blob/master/Neural%20Networks%20and%20Deep%20Learning/Week%203%20Quiz%20-%20Shallow%20Neural%20Networks.md)
 
