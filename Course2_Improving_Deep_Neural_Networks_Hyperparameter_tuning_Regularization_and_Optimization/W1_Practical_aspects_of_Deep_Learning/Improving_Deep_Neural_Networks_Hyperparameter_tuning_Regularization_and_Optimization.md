@@ -334,18 +334,20 @@ $$
 $$
 {||x||}_2 = \sum^N_{i=1}{|x_i|}^2
 $$
-表示向量$x$的2-范数（也称“欧几里德范数”）。
+表示向量$x$的2-范数（也称“欧几里德范数”）。分母是为了防止分子太大或者太小，使结果成为比率。
 
 如果梯度检验值和$ε$的值相近，说明神经网络的实施是正确的，否则要去检查代码是否存在 bug。
 
+其中$ε$一般为$10^{-7}$如果这个值比$10^{-3}$大很多那就代表很可能程序有问题，需要进行检测。当最终结果变成$10^{-7}$时，那就说明程序是没问题的了。
+
 ### 在神经网络实施梯度校验的实用技巧和注意事项
 
-1. 不要在训练集(training set)中使用梯度检验，它只用于调试（debug）。使用完毕关闭梯度检验的功能；
+1. 不要在训练集(training set)中使用梯度检验，它只用于调试(debug)，因为计算它比较慢。使用完毕关闭梯度检验的功能；
 2. 如果算法的梯度检验失败，要检查所有项，并试着找出 bug，即确定哪个dθapprox[i] 与 dθ 的值相差比较大；
 3. 当成本函数包含正则项时，也需要带上正则项进行检验；
 4. 梯度检验不能与 dropout 同时使用。因为每次迭代过程中，dropout 会随机消除隐藏层单元的不同子集，难以计算 dropout 在梯度下降上的成本函数$J$。建议关闭 dropout，用梯度检验进行双重检查，确定在没有 dropout 的情况下算法正确，然后打开 dropout；
 
 
 
-[Practical aspects of deep learning - Quiz]([https://github.com/Kulbear/deep-learning-coursera/blob/master/Improving%20Deep%20Neural%20Networks%20Hyperparameter%20tuning%2C%20Regularization%20and%20Optimization/Week%201%20Quiz%20-%20Practical%20aspects%20of%20deep%20learning.md])
+[Practical aspects of deep learning - Quiz](https://github.com/Kulbear/deep-learning-coursera/blob/master/Improving%20Deep%20Neural%20Networks%20Hyperparameter%20tuning%2C%20Regularization%20and%20Optimization/Week%201%20Quiz%20-%20Practical%20aspects%20of%20deep%20learning.md)
 
