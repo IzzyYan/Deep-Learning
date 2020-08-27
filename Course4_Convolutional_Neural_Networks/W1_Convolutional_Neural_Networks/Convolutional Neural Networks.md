@@ -160,3 +160,75 @@ $$
 ## 简单卷积网络示例
 
 一个简单的 CNN 模型如下图所示：
+
+![img](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Convolutional_Neural_Networks/Simple-Convolutional-Network-Example.jpg)
+
+其中，$a^{[3]}$的维度为 7x7x40，将 1960 个特征平滑展开成 1960 个单元的一列，然后连接最后一级的输出层。输出层可以是一个神经元，即二元分类（logistic）；也可以是多个神经元，即多元分类（softmax）。最后得到预测输出$\hat y$。
+
+随着神经网络计算深度不断加深，图片的高度和宽度$n^{[l]}_H$、$n^{[l]}_W$一般逐渐减小，而通道数$n^{[l]}_c$在增加。
+
+一个典型的卷积神经网络通常包含有三种层：**卷积层（Convolution layer）**、**池化层（Pooling layer）**、**全连接层（Fully Connected layer）**。仅用卷积层也有可能构建出很好的神经网络，但大部分神经网络还是会添加池化层和全连接层，它们更容易设计。
+
+## 池化层(Pooling Layers)
+
+**池化层**的作用是缩减模型的大小，提高计算速度，同时减小噪声提高所提取特征的稳健性。
+
+采用较多的一种池化过程叫做**最大池化（Max Pooling）**。将输入拆分成不同的区域，输出的每个元素都是对应区域中元素的最大值，如下图所示：
+
+![img](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Convolutional_Neural_Networks/Max-Pooling.png)
+
+池化过程类似于卷积过程，上图所示的池化过程中相当于使用了一个大小$f=2$的滤波器，且池化步长$s=2$。卷积过程中的几个计算大小的公式也都适用于池化过程。如果有多个通道，那么就对每个通道分别执行计算过程。
+
+对最大池化的一种直观解释是，元素值较大可能意味着池化过程之前的卷积过程提取到了某些特定的特征，池化过程中的最大化操作使得只要在一个区域内提取到某个特征，它都会保留在最大池化的输出中。但是，没有足够的证据证明这种直观解释的正确性，而最大池化被使用的主要原因是它在很多实验中的效果都很好。
+
+另一种池化过程是**平均池化（Average Pooling）**，就是从取某个区域的最大值改为求这个区域的平均值：
+
+![img](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Convolutional_Neural_Networks/Average-Pooling.png)
+
+池化过程的特点之一是，它有一组超参数，但是并**没有参数需要学习**。池化过程的超参数包括滤波器的大小$f$、步长$s$，以及选用最大池化还是平均池化。而填充$p$则很少用到。
+
+池化过程的输入维度为：
+$$
+n_H \times n_W \times n_c
+$$
+输出维度为：
+$$
+\biggl\lfloor \frac{n_H-f}{s}+1   \biggr\rfloor \times \biggl\lfloor \frac{n_W-f}{s}+1   \biggr\rfloor \times n_c
+$$
+
+## 卷积神经网络示例
+
+![img](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Convolutional_Neural_Networks/CNN-Example.jpg)
+
+在计算神经网络的层数时，通常只统计具有权重和参数的层，因此池化层通常和之前的卷积层共同计为一层。
+
+图中的 FC3 和 FC4 为全连接层，与标准的神经网络结构一致。整个神经网络各层的尺寸与参数如下表所示：
+
+|                     | Activation shape | Activation Size |       \#parameters        |
+| :-----------------: | :--------------: | :-------------: | :-----------------------: |
+|     **Input:**      |   (32, 32, 3)    |      3072       |             0             |
+| **CONV1(f=5, s=1)** |   (28, 28, 6)    |      4704       |  608 ((5\*5\*3 \+ 1)\*8)  |
+|      **POOL1**      |   (14, 14, 6)    |      1176       |             0             |
+| **CONV2(f=5, s=1)** |   (10, 10, 16)   |      1600       | 3216 ((5\*5\*8 \+ 1)\*16) |
+|      **POOL2**      |    (5, 5, 16)    |       400       |             0             |
+|       **FC3**       |     (120, 1)     |       120       |   48120 (400\*120\+120)   |
+|       **FC4**       |     (84, 1)      |       84        |    10164 (120\*84\+84)    |
+|     **Softmax**     |     (10, 1)      |       10        |     850 (84\*10\+10)      |
+
+*最大池化层没有任何参数*
+
+[一个直观感受卷积神经网络的网站](https://www.cs.ryerson.ca/~aharley/vis/conv/)
+
+## 使用卷积的原因(Why Convolutions?)
+
+相比标准神经网络，对于大量的输入数据，卷积过程有效地减少了 CNN 的参数数量，原因有以下两点：
+
+- **参数共享（Parameter sharing）**：特征检测如果适用于图片的某个区域，那么它也可能适用于图片的其他区域。即在卷积过程中，不管输入有多大，一个特征探测器（滤波器）就能对整个输入的某一特征进行探测。
+- **稀疏连接（Sparsity of connections）**：在每一层中，由于滤波器的尺寸限制，输入和输出之间的连接是稀疏的，每个输出值只取决于输入在局部的一小部分值。
+
+池化过程则在卷积后很好地聚合了特征，通过降维来减少运算量。
+
+由于 CNN 参数数量较小，所需的训练样本就相对较少，因此在一定程度上不容易发生过拟合现象。并且 CNN 比较擅长捕捉区域位置偏移。即进行物体检测时，不太受物体在图片中位置的影响，增加检测的准确性和系统的健壮性。
+
+[The Basics of ConvNets - Quiz](https://github.com/jiadaizhao/Deep-Learning-Specialization/blob/master/Convolutional%20Neural%20Networks/Week1/QUIZ%20The%20basics%20of%20ConvNets.pdf)
+
