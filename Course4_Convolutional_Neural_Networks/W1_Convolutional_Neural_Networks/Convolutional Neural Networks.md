@@ -232,3 +232,7 @@ $$
 
 [The Basics of ConvNets - Quiz](https://github.com/jiadaizhao/Deep-Learning-Specialization/blob/master/Convolutional%20Neural%20Networks/Week1/QUIZ%20The%20basics%20of%20ConvNets.pdf)
 
+[numpy.pad教程](https://blog.csdn.net/hustqb/article/details/77726660)
+
+[一文搞懂交叉熵在机器学习中的使用，透彻理解交叉熵背后的直觉 - CSDN](https://blog.csdn.net/tsyccnh/article/details/79163834)
+
